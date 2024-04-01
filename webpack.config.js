@@ -1,4 +1,5 @@
-const path = require('path')
+const path = require('path');
+const HtmlWebpackplugin = require('html-webpack-plugin')
 module.exports = {
   //入口
   entry: './src/js/main.js', //相对路径
@@ -7,8 +8,16 @@ module.exports = {
     //__dirname  nodejs 的变量， 代表当前文件的文件夹目录
     //所有文件的输出目录
     path: path.resolve(__dirname, 'dist'),
+    //                  ^
+     //                 |
+    clean: true, //清空path目录中上一次的打包
     //入口文件的输出目录和文件名
     filename: "static/js/shawn.js"
+  },
+  devServer: {
+    host:'localhost', //服务器域名
+    port:3000, //开启服务的端口号
+    open: true, //自动打开浏览器
   },
   // 加载器
   module: {
@@ -50,7 +59,14 @@ module.exports = {
     ]
   },
   //插件
-  plugins: [],
+  plugins: [
+    //打包后自动生成一个html 去引入打包后的js文件
+    new HtmlWebpackplugin({
+      //如果不用模板文件， 会自己生成一个新的空html文件 ，不会保留自定义的html内容
+      // template 会保留之前的内容
+      template: path.resolve(__dirname, 'public/index.html')
+    })
+  ],
   //打包模式
   mode: 'development'
 }
